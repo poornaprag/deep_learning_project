@@ -67,10 +67,29 @@ import flask
 app = Flask(__name__)
 
 
+from flask_caching import Cache
+# import predict
+
+app = Flask(__name__) 
+i=1
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0.002
+
+@app.after_request
+def add_header(r):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r
+
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('test.html')
 
 
 
@@ -139,8 +158,6 @@ class Rnn_Global_Decoder(tf.keras.Model):
         '''----------------------------------------------------------'''
 
 
-
-
         # Concat score as per paper (score: VT*tanh(W[ht;hs']))    
         '''----------------------------------------------------------'''
         #https://www.tensorflow.org/api_docs/python/tf/tile
@@ -191,7 +208,10 @@ class Rnn_Global_Decoder(tf.keras.Model):
 
 @app.route('/predict', methods=['POST'])
 def predict():
-
+    resp=Response()
+    resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    resp.headers["Pragma"] = "no-cache"
+    resp.headers["Expires"] = "0"
     checkpoint_path = "C:\\Users\\poorn\\Downloads\\image_project\\project\\checkpoint\\train\\ckpt-7"
     train_captions = load(open('./captions.pkl', 'rb'))
 
@@ -229,8 +249,6 @@ def predict():
         return min(len(t) for t in tensor)
     # Calculates the max_length, which is used to store the attention weights
     min_length = calc_min_length(train_seqs)
-
-
 
 
     #restoring the model
@@ -320,7 +338,7 @@ def predict():
 
     #     def reset_state(self, batch_size):
     #         return tf.zeros((batch_size, self.units))
-
+    
     embedding_dim = 256
     units = 512
     vocab_size = len(tokenizer.word_index) + 1 
@@ -340,6 +358,7 @@ def predict():
             x = self.fc(x)
             x = tf.nn.relu(x)
             return x
+
     encoder = VGG16_Encoder(embedding_dim)
     optimizer = tf.keras.optimizers.Adam()
     ckpt = tf.train.Checkpoint(encoder=encoder,decoder=decoder,optimizer = optimizer)
@@ -376,21 +395,15 @@ def predict():
         # image = preprocess_input(image)
         # # print(image)
         # # image = (tf.convert_to_tensor(image))
-
         # # image = tf.cast(image, tf.float32)
         # # image = tf.image.encode_jpeg(image)
-
         # img = tf.image.decode_jpeg(image, channels=3)
-        
         # img = tf.image.resize(img, (224, 224))
         # img = preprocess_input(img)
         # return img, filename
+        # return image, filename
 
-        return image, filename
-    # resp=Response()
-    # resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    # resp.headers["Pragma"] = "no-cache"
-    # resp.headers["Expires"] = "0"
+  
     # if request.method == 'POST':
     #     f= request.files['pic']
     #     print(f)
@@ -406,25 +419,20 @@ def predict():
     #     load_image(f)
 
 
-
-
-
-
-
-    print("HIIIIIii",Image_path)
+    print("Hi",Image_path)
     attention_features_shape = 49
     image_model = tf.keras.applications.VGG16(include_top=False,weights='imagenet')
     new_input = image_model.input # Any arbitrary shapes with 3 channels
     hidden_layer = image_model.layers[-1].output
-    image_features_extract_model = tf.keras.Model(new_input, hidden_layer)
+    feat_extrac_model = tf.keras.Model(new_input, hidden_layer)
     
     def evaluate(image):
-        attention_plot = np.zeros((max_length, attention_features_shape))
+        attn_plt = np.zeros((max_length, attention_features_shape))
 
         hidden = decoder.reset_state(batch_size=1)
 
         temp_input = tf.expand_dims(load_image(image)[0], 0)
-        img_tensor_val = image_features_extract_model(temp_input)
+        img_tensor_val = feat_extrac_model(temp_input)
         img_tensor_val = tf.reshape(img_tensor_val, (img_tensor_val.shape[0], -1, img_tensor_val.shape[3]))
 
         features = encoder(img_tensor_val)
@@ -435,25 +443,21 @@ def predict():
         for i in range(max_length):
             predictions, hidden, attention_weights = decoder(dec_input, features, hidden)
 
-            attention_plot[i] = tf.reshape(attention_weights, (-1, )).numpy()
+            attn_plt[i] = tf.reshape(attention_weights, (-1, )).numpy()
 
             predicted_id = tf.argmax(predictions[0]).numpy()
             result.append(tokenizer.index_word[predicted_id])
 
             if tokenizer.index_word[predicted_id] == '<end>':
-                return result, attention_plot
+                return result, attn_plt
 
             dec_input = tf.expand_dims([predicted_id], 0)
 
-        attention_plot = attention_plot[:len(result), :]
-        return result, attention_plot
+        attn_plt = attn_plt[:len(result), :]
+        return result, attn_plt
 
 
     new_img =  Image_path
-    #image_extension = Image_path[-3:]
-
-    #image_path = tf.keras.utils.get_file('image'+image_extension,origin=Image_path)
-
     result, attention_plot = evaluate(new_img)
     for i in result:
         if i=="<unk>":
@@ -461,9 +465,8 @@ def predict():
         else:
             pass
 
-    #print('I guess: ', ' '.join(result).rsplit(' ', 1)[0])
     captn =' '
-    return render_template('index.html', prediction_text='Potential captions:{}'.format(captn.join(result).rsplit(' ', 1)[0]))
+    return render_template('next.html', prediction_text=(captn.join(result).rsplit(' ', 1)[0]),ttt=os.path.join(THIS_FOLDER,'static','css','temp5.jpg'))
 
 
 
