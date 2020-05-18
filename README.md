@@ -102,7 +102,11 @@ The Image Model (VGG-16) defining which pre-trained:
 * It is similar to training step, just that we do not update the gradients, and provide the predicted output as decoder input to next RNN cell at next time steps.
 * Test step is required to find out whether the model built is overfitting or not.
 
+## Sample Outputs
 
+![alt text](https://github.com/poornaprag/deep_learning_project/blob/master/pictures/pic1.png?raw=true)
+
+![alt text](https://github.com/poornaprag/deep_learning_project/blob/master/pictures/pic2.png?raw=true)
 
 ## TensorBoard Summary	
 
