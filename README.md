@@ -2,8 +2,13 @@
 
 
 ## Video Presentation Links
-![alt text](https://github.com/poornaprag/deep_learning_project/blob/master/Project_Presentation_Short.MOV?raw=true "Download Short Presentation")
-![alt text](https://drive.google.com/file/d/1GNtassuNpYC2YWWuV6kx7b2mSb6SNKek/view?usp=sharing "Full Presentation")
+
+Short - https://github.com/poornaprag/deep_learning_project/blob/master/Project_Presentation_Short.MOV?raw=true
+Full - https://drive.google.com/file/d/1GNtassuNpYC2YWWuV6kx7b2mSb6SNKek/view?usp=sharing
+
+## Hosted on:
+[ec2-3-218-186-119.compute-1.amazonaws.com](ec2-3-218-186-119.compute-1.amazonaws.com)
+[ec2-54-205-156-188.compute-1.amazonaws.com](ec2-54-205-156-188.compute-1.amazonaws.com)
 
 ## Author(s): 
 Poornapragna Vadiraj, Varun Bhaseen, Mirsaeid Abolghasemi
