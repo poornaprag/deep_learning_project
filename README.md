@@ -10,6 +10,9 @@ Full - https://drive.google.com/file/d/1GNtassuNpYC2YWWuV6kx7b2mSb6SNKek/view?us
 [ec2-3-218-186-119.compute-1.amazonaws.com](ec2-3-218-186-119.compute-1.amazonaws.com)  
 [ec2-54-205-156-188.compute-1.amazonaws.com](ec2-54-205-156-188.compute-1.amazonaws.com)
 
+## TensorBoard Link:
+https://tensorboard.dev/experiment/r7g8gQT5T2SkEXOs4gXYTQ/
+
 ## Author(s): 
 Poornapragna Vadiraj, Varun Bhaseen, Mirsaeid Abolghasemi
 
