@@ -3,7 +3,7 @@
 
 ## Video Presentation Links
 
-Short - https://github.com/poornaprag/deep_learning_project/blob/master/Project_Presentation_Short.MOV?raw=true
+Short - https://github.com/poornaprag/deep_learning_project/blob/master/Project_Presentation_Short.mp4?raw=true
 Full - https://drive.google.com/file/d/1GNtassuNpYC2YWWuV6kx7b2mSb6SNKek/view?usp=sharing
 
 ## Hosted on:
